@@ -36,13 +36,16 @@ python -m pip install -r requirements.txt
 
 ### 2. 配置 API Key
 
-启动后可以直接在左侧输入 Key。
-
-如果希望自动读取，可以创建 `.streamlit/secrets.toml`：
+本地开发时，可以创建 `.streamlit/secrets.toml`：
 
 ```toml
 DEEPSEEK_API_KEY = "sk-你的APIKey"
 ```
+
+Streamlit Community Cloud 请在应用的 `Settings > Secrets` 中填写同样内容。
+
+服务器已配置 Key 时，网页只显示“API Key 已由服务器安全配置”，不会把 Key
+发送到访问者的浏览器。未配置时，左侧才会显示手动输入框。
 
 ### 3. 启动
 

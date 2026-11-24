@@ -33,7 +33,7 @@ class RetrievedChunk:
     score: float
 
 
-def get_default_api_key() -> str:
+def get_configured_api_key() -> str:
     """Read the API key from an environment variable or Streamlit secrets."""
     api_key = os.getenv("DEEPSEEK_API_KEY", "").strip()
     if api_key:
@@ -43,6 +43,8 @@ def get_default_api_key() -> str:
         return str(st.secrets.get("DEEPSEEK_API_KEY", "")).strip()
     except Exception:
         return ""
+
+server_api_key = get_configured_api_key()
 
 
 @st.cache_data(show_spinner=False)
@@ -187,12 +189,15 @@ with st.sidebar:
     st.header("文档与模型设置")
 
     uploaded_file = st.file_uploader("上传 PDF 文件", type=["pdf"])
-    api_key = st.text_input(
-        "DeepSeek API Key",
-        type="password",
-        value=get_default_api_key(),
-        help="也可以通过环境变量 DEEPSEEK_API_KEY 配置。",
-    ).strip()
+    if server_api_key:
+        api_key = server_api_key
+        st.success("API Key 已由服务器安全配置")
+    else:
+        api_key = st.text_input(
+            "DeepSeek API Key",
+            type="password",
+            help="仅当服务器未配置 Key 时需要填写。",
+        ).strip()
     temperature = st.slider(
         "回答随机性",
         min_value=0.0,
